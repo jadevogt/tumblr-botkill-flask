@@ -69,6 +69,7 @@ class Blog:
     avatar: str
     follower_count: int
     name: str
+    description: str
     primary: bool
     background_color: str
     header: str
@@ -83,6 +84,7 @@ class Blog:
             avatar=json["avatar"][0]["url"],
             follower_count=json["followers"],
             name=json["name"],
+            description=json["description"],
             primary=json["primary"],
             background_color=json["theme"].get("background_color"),
             header=json["theme"].get("header_image"),
@@ -151,6 +153,8 @@ class Tumblr:
         perform an http GET
         """
         response = requests.get(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers)
+        print(response.status_code)
+        print(response.content)
         return response.json()
 
 
@@ -170,6 +174,21 @@ class Tumblr:
         get a list of Blog objects
         """
         return [Blog.from_json(b) for b in self.user_info()["blogs"]]
+
+    def blog_followers(self, blog: Blog):
+        resp = self.get(f"blog/{blog.uuid}/followers")
+        offset = 20
+        users = resp["response"]["users"]
+        while offset < resp["response"]["total_users"]:
+            resp = self.get(f"blog/{blog.uuid}/followers?offset={offset}")
+            if resp["response"].get("users"):
+                users += resp["response"]["users"]
+            offset += 20
+        return users
+
+    def public_blog_post_count(self, blog_name: str):
+        resp = self.get(f"blog/{blog_name}/info?fields[blogs]=posts")
+        return resp["response"]["blog"]["posts"]
 
     @property
     def privileged_headers(self):

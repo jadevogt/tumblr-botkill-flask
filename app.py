@@ -1,7 +1,9 @@
-from flask import Flask, session, request, redirect
+from flask import Flask, session, request, redirect, render_template
 from os import environ
 import uuid
 from urllib.parse import urlencode, urlparse, parse_qs
+from base64 import b64encode
+from json import dumps
 
 from tumblr import Tumblr
 
@@ -10,30 +12,28 @@ app.secret_key = environ.get("FLASK_SECRET_KEY")
 
 
 @app.route('/')
-def index():  # put application's code here
+def index():
     """
     index
     """
-    return 'main page'
+    return 'click <a href="/initiate-auth">here</a> to initiate the authentication procedure'
 
-
-@app.route('/check_auth')
-def check_auth():
-    tumblr = Tumblr(token=session.get("tumblr_token"))
-    if tumblr.authenticated:
-        return f"""
-        authenticated: {tumblr.token}
-        user info: {tumblr.user_info()}
-        """
-    else:
-        return f"""
-        not authenticated.
-        """
 
 @app.route("/list_blogs")
 def list_blogs():
     tumblr = Tumblr(token=session.get("tumblr_token"))
-    return "</br>".join(blog.__str__() for blog in tumblr.user_blogs())
+    blog_list = tumblr.user_blogs()
+    non_mutual_followers = []
+    for blog in blog_list:
+        new = [f for f in tumblr.blog_followers(blog) if not f["following"]]
+        for follower in new:
+            follower["follows"] = blog.name
+            non_mutual_followers += new
+    sus_blogs = []
+    for follower in non_mutual_followers:
+        if tumblr.public_blog_post_count(blog_name=follower["name"]) == 0:
+            sus_blogs.append(follower)
+    return render_template("blog_list.html", blog_list=blog_list, sus_blogs=sus_blogs)
 
 
 @app.route('/auth')
@@ -50,9 +50,8 @@ def auth_handler():
     tumblr.authenticate(returned_code)
     session["tumblr_token"] = tumblr.token.to_dict()
     return f"""
-    <h2>{tumblr.token}</h2>
-    <h2>state: {state}</h2>
-    <h2>returned state: {returned_state}</h2>
+    <h1>success!</h1>
+    <a href="/list_blogs">list blogs</a>
     """
 
 @app.route('/initiate-auth')
