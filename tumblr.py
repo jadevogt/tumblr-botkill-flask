@@ -92,7 +92,7 @@ class Tumblr:
                 'redirect_uri': self.redirect_uri,
                 'code': authentication_code,
             }
-            response = requests.post(headers=self.default_headers, json=body)
+            response = requests.post("https://api.tumblr.com/v2/oauth2/token", headers=self.default_headers, json=body)
             self.token = Token.from_response(response.json())
         except Exception:
             logging.error(response.content)
