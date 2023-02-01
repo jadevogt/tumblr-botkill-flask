@@ -131,17 +131,16 @@ class Tumblr:
             self.token = None
 
     def authenticate(self, authentication_code):
-        try:
-            body = {
-                'grant_type': 'authorization_code',
-                'client_id': self.consumer_id,
-                'client_secret': self.consumer_secret,
-                'redirect_uri': self.redirect_uri,
-                'code': authentication_code,
-            }
-            response = requests.post("https://api.tumblr.com/v2/oauth2/token",
-                                     headers=self.default_headers, json=body)
-            self.token = Token.from_dict(response.json())
+        body = {
+            'grant_type': 'authorization_code',
+            'client_id': self.consumer_id,
+            'client_secret': self.consumer_secret,
+            'redirect_uri': self.redirect_uri,
+            'code': authentication_code,
+        }
+        response = requests.post("https://api.tumblr.com/v2/oauth2/token",
+                                 headers=self.default_headers, json=body)
+        self.token = Token.from_dict(response.json())
 
     @property
     def authenticated(self) -> bool:
