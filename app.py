@@ -1,5 +1,6 @@
 from flask import Flask, session, request, redirect, render_template
 from os import environ
+import logging
 import uuid
 from urllib.parse import urlencode, urlparse, parse_qs
 from base64 import b64encode
