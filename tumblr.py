@@ -12,7 +12,6 @@ class Token:
     access_token: str
     expires_in: int
     id_token: bool
-    refresh_token: str
     scope: str
     token_type: str
     originally_issued: datetime = field(init=False)
@@ -39,7 +38,6 @@ class Token:
             access_token=response["access_token"],
             expires_in=response["expires_in"],
             id_token=response["id_token"],
-            refresh_token=response["refresh_token"],
             scope=response["scope"],
             token_type=response["token_type"]
         )
@@ -49,7 +47,6 @@ EXAMPLE = {
     "access_token": "{access_token}",
     "expires_in": 2520,
     "id_token": False,
-    "refresh_token": "{refresh_token}",
     "scope": "write offline_access",
     "token_type": "bearer"
 }
@@ -92,7 +89,8 @@ class Tumblr:
                 'redirect_uri': self.redirect_uri,
                 'code': authentication_code,
             }
-            response = requests.post("https://api.tumblr.com/v2/oauth2/token", headers=self.default_headers, json=body)
+            response = requests.post("https://api.tumblr.com/v2/oauth2/token",
+                                     headers=self.default_headers, json=body)
             self.token = Token.from_response(response.json())
         except Exception:
             logging.error(response.content)
