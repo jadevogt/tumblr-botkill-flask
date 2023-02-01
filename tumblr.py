@@ -154,7 +154,7 @@ class Tumblr:
         perform an http GET
         """
         response = requests.get(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers)
-        if response.json().get("meta") is not None and response.json()["meta"]["status"] == 429:
+        if response.json().get("meta") is not None and response.json()["meta"]["status"] != 200:
             self.token = None
             raise RateLimitException()
         return response.json()
@@ -162,7 +162,7 @@ class Tumblr:
 
     def post(self, endpoint, body):
         response = requests.post(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers, json=body)
-        if response.json().get("meta") is not None and response.json()["meta"]["status"] == 429:
+        if response.json().get("meta") is not None and response.json()["meta"]["status"] != 200:
             self.token = None
             raise RateLimitException()
         return response.json()
