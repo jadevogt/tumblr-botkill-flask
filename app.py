@@ -5,7 +5,7 @@ from urllib.parse import urlencode, urlparse, parse_qs
 from base64 import b64encode
 from json import dumps
 
-from tumblr import Tumblr
+from tumblr import Tumblr, RateLimitException
 
 app = Flask(__name__)
 app.secret_key = environ.get("FLASK_SECRET_KEY")
@@ -21,38 +21,43 @@ def index():
 
 @app.route("/list_blogs")
 def list_blogs():
-    tumblr = Tumblr(token=session.get("tumblr_token"))
-    blog_list = tumblr.user_blogs()
-    non_mutual_followers = []
-    for blog in blog_list:
-        new = [f for f in tumblr.blog_followers(blog) if not f["following"]]
-        for follower in new:
-            follower["follows"] = blog.name
-            non_mutual_followers += new
-    sus_blogs = []
-    for follower in non_mutual_followers:
-        if tumblr.public_blog_post_count(blog_name=follower["name"]) == 0:
-            sus_blogs.append(follower)
-    return render_template("blog_list.html", blog_list=blog_list, sus_blogs=sus_blogs)
-
+    try:
+        tumblr = Tumblr(token=session.get("tumblr_token"))
+        blog_list = tumblr.user_blogs()
+        non_mutual_followers = []
+        for blog in blog_list:
+            new = [f for f in tumblr.blog_followers(blog) if not f["following"]]
+            for follower in new:
+                follower["follows"] = blog.name
+                non_mutual_followers += new
+        sus_blogs = []
+        for follower in non_mutual_followers:
+            if tumblr.public_blog_post_count(blog_name=follower["name"]) == 0:
+                sus_blogs.append(follower)
+        return render_template("blog_list.html", blog_list=blog_list, sus_blogs=sus_blogs)
+    except RateLimitException:
+        return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
 
 @app.route('/auth')
 def auth_handler():
     """
     auth
     """
-    parsed_url = urlparse(request.url)
-    qs = parse_qs(parsed_url.query)
-    state = session.get("state")
-    returned_state = qs.get("state")
-    returned_code = qs.get("code")[0]
-    tumblr = Tumblr()
-    tumblr.authenticate(returned_code)
-    session["tumblr_token"] = tumblr.token.to_dict()
-    return f"""
-    <h1>success!</h1>
-    <a href="/list_blogs">list blogs</a>
-    """
+    try:
+        parsed_url = urlparse(request.url)
+        qs = parse_qs(parsed_url.query)
+        state = session.get("state")
+        returned_state = qs.get("state")
+        returned_code = qs.get("code")[0]
+        tumblr = Tumblr()
+        tumblr.authenticate(returned_code)
+        session["tumblr_token"] = tumblr.token.to_dict()
+        return f"""
+        <h1>success!</h1>
+        <a href="/list_blogs">list blogs</a>
+        """
+    except RateLimitException:
+        return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
 
 @app.route('/initiate-auth')
 def auth_initiator():

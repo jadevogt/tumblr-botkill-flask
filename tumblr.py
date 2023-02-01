@@ -6,6 +6,10 @@ from os import environ
 import requests
 
 
+class RateLimitException(Exception):
+    pass
+
+
 @dataclass(frozen=True)
 class Token:
     """ tumblr auth token """
@@ -137,6 +141,9 @@ class Tumblr:
             }
             response = requests.post("https://api.tumblr.com/v2/oauth2/token",
                                      headers=self.default_headers, json=body)
+            if response.json().get("meta") is not None and response.json()["meta"]["status"] == 429:
+                self.token = None
+                return
             self.token = Token.from_dict(response.json())
         except Exception:
             logging.error(response.content)
@@ -153,13 +160,17 @@ class Tumblr:
         perform an http GET
         """
         response = requests.get(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers)
-        print(response.status_code)
-        print(response.content)
+        if response.json().get("meta") is not None and response.json()["meta"]["status"] == 429:
+            self.token = None
+            raise RateLimitException()
         return response.json()
 
 
     def post(self, endpoint, body):
         response = requests.post(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers, json=body)
+        if response.json().get("meta") is not None and response.json()["meta"]["status"] == 429:
+            self.token = None
+            raise RateLimitException()
         return response.json()
 
 
