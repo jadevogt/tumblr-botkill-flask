@@ -80,8 +80,8 @@ class Tumblr:
     }
 
     def __init__(self):
-        consumer_id = environ.get("TUMBLR_CONSUMER_KEY")
-        consumer_secret = environ.get("TUMBLR_CONSUMER_SECRET")
+        self.consumer_id = environ.get("TUMBLR_CONSUMER_KEY")
+        self.consumer_secret = environ.get("TUMBLR_CONSUMER_SECRET")
 
     def authenticate(self, authentication_code):
         try:
