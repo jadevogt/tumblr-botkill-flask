@@ -60,25 +60,12 @@ def auth_handler():
     returned_code = qs.get("code")[0]
     tumblr = Tumblr()
     tumblr.authenticate(returned_code)
+    logging.error(str(tumblr))
     session["tumblr_token"] = tumblr.token.to_dict()
     return f"""
     <h1>success!</h1>
     <a href="/list_blogs">list blogs</a>
     """
-
-
-@app.route('/initiate-auth')
-def auth_initiator():
-    """
-    init auth
-    """
-    params = make_url_params(writeable=False)
-    return redirect(f"https://www.tumblr.com/oauth2/authorize?{urlencode(params)}")
-
-
-if __name__ == '__main__':
-    app.run()
-
 
 def make_url_params(writeable: bool = False):
     scope = 'basic write' if writeable else 'basic'
@@ -93,3 +80,18 @@ def make_url_params(writeable: bool = False):
         'state': state,
     }
     return params
+
+@app.route('/initiate-auth')
+def auth_initiator():
+    """
+    init auth
+    """
+    params = make_url_params(writeable=False)
+    return redirect(f"https://www.tumblr.com/oauth2/authorize?{urlencode(params)}")
+
+
+if __name__ == '__main__':
+    app.run()
+
+
+

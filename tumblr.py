@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from os import environ
 import logging
+from typing import Optional
 
 import requests
 
@@ -105,7 +106,7 @@ class Tumblr:
     """
     consumer_id: str
     consumer_secret: str
-    token: Token | None
+    token: Optional[Token]
     redirect_uri: str = environ.get("REDIRECT_URI")
 
     def __str__(self):
@@ -134,13 +135,18 @@ class Tumblr:
     def authenticate(self, authentication_code):
         body = {
             'grant_type': 'authorization_code',
+            'code': authentication_code,
             'client_id': self.consumer_id,
             'client_secret': self.consumer_secret,
-            'redirect_uri': self.redirect_uri,
-            'code': authentication_code,
+        }
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'User-Agent': 'PyTumblrBotKill/0.0.1',
         }
         response = requests.post("https://api.tumblr.com/v2/oauth2/token",
-                                 headers=self.default_headers, json=body)
+                                 headers=self.headers, json=body)
+        logging.error(str(response.json()))
         self.token = Token.from_dict(response.json())
 
     @property
