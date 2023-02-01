@@ -16,7 +16,7 @@ def index():
     """
     index
     """
-    return 'click <a href="/initiate-auth">here</a> to initiate the authentication procedure'
+    return render_template("intro.html")
 
 
 @app.route("/list_blogs")
@@ -61,10 +61,7 @@ def auth_handler():
         tumblr = Tumblr()
         tumblr.authenticate(returned_code)
         session["tumblr_token"] = tumblr.token.to_dict()
-        return f"""
-        <h1>success!</h1>
-        <a href="/list_blogs">list blogs</a>
-        """
+        return redirect('/list_blogs')
     except (RateLimitException, KeyError):
         return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
 
@@ -73,7 +70,7 @@ def auth_initiator():
     """
     init auth
     """
-    params = make_url_params(writeable=True)
+    params = make_url_params(writeable=False)
     return redirect(f"https://www.tumblr.com/oauth2/authorize?{urlencode(params)}")
 
 
