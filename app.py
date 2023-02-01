@@ -35,7 +35,7 @@ def list_blogs():
         for follower in non_mutual_followers:
             if tumblr.public_blog_post_count(blog_name=follower["name"]) == 0:
                 follower["report_json_str"] = dumps({
-                    "post":null,
+                    "post":None,
                     "urlreporting":f"https://www.tumblr.com/{follower['name']}",
                     "tumblelog":follower["name"],
                     "context":"blog"
