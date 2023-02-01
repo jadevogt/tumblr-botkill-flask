@@ -62,10 +62,7 @@ def auth_handler():
     tumblr.authenticate(returned_code)
     logging.error(str(tumblr))
     session["tumblr_token"] = tumblr.token.to_dict()
-    return f"""
-    <h1>success!</h1>
-    <a href="/list_blogs">list blogs</a>
-    """
+    return render_template("auth_success.html")
 
 def make_url_params(writeable: bool = False):
     scope = 'basic write' if writeable else 'basic'
