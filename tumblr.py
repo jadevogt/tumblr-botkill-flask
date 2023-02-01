@@ -142,6 +142,7 @@ class Tumblr:
         response = requests.post("https://api.tumblr.com/v2/oauth2/token",
                                  headers=self.default_headers, json=body)
         if response.json().get("access_token") is None:
+            logging.error("issue in the authentication workflow")
             logging.error(str(response.json()))
             raise RateLimitException()
         self.token = Token.from_dict(response.json())
@@ -167,10 +168,6 @@ class Tumblr:
 
     def post(self, endpoint, body):
         response = requests.post(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers, json=body)
-        if response.json().get("meta") is not None and response.json()["meta"]["status"] != 200:
-            self.token = None
-            logging.error(response.json().get("meta"))
-            raise RateLimitException()
         return response.json()
 
 
