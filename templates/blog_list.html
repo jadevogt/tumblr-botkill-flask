@@ -55,7 +55,7 @@
       <li><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a> - <button id="{{ sus['name'] }}-{{ blog.name }}-report-button">report</button></li>
       <script>
           document.getElementById("{{ sus['name'] }}-{{ blog.name }}-report-button").addEventListener("click", ()=>{
-              open("https://www.tumblr.com/abuse/start?prefill=" + btoa('{{ sus.report_json_str }}'))
+              open("https://www.tumblr.com/abuse/start?prefill=" + btoa('{{ sus.report_json_str |safe }}'))
           })
       </script>
   {% endfor %}
