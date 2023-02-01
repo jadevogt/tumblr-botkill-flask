@@ -26,12 +26,14 @@ def auth_handler():
     qs = parse_qs(parsed_url.query)
     state = session.get("state")
     returned_state = qs.get("state")
-    if state not in returned_state:
-        return f"""state mismatch!"""
     returned_code = qs.get("code")[0]
     tumblr = Tumblr()
     tumblr.authenticate(returned_code)
-    return f"""<h2>{tumblr.token}</h2>"""
+    return f"""
+    <h2>{tumblr.token}</h2>
+    <h2>state: {state}</h2>
+    <h2>returned state: {returned_state}</h2>
+    """
 
 @app.route('/initiate-auth')
 def auth_initiator():
