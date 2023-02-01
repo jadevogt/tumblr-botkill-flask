@@ -54,12 +54,12 @@ def auth_handler():
     auth
     """
     try:
-        tumblr = Tumblr(session.get("tumblr_token"))
         parsed_url = urlparse(request.url)
         qs = parse_qs(parsed_url.query)
         state = session.get("state")
         returned_state = qs.get("state")
         returned_code = qs.get("code")[0]
+        tumblr = Tumblr()
         tumblr.authenticate(returned_code)
         session["tumblr_token"] = tumblr.token.to_dict()
         return redirect('/list_blogs')
