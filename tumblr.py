@@ -182,13 +182,7 @@ class Tumblr:
 
     def blog_followers(self, blog: Blog):
         resp = self.get(f"blog/{blog.uuid}/followers")
-        offset = 20
         users = resp["response"]["users"]
-        while offset < resp["response"]["total_users"]:
-            resp = self.get(f"blog/{blog.uuid}/followers?offset={offset}")
-            if resp["response"].get("users"):
-                users += resp["response"]["users"]
-            offset += 20
         return users
 
     def public_blog_post_count(self, blog_name: str):
