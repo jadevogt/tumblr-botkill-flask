@@ -142,8 +142,6 @@ class Tumblr:
             response = requests.post("https://api.tumblr.com/v2/oauth2/token",
                                      headers=self.default_headers, json=body)
             self.token = Token.from_dict(response.json())
-        except Exception:
-            logging.error(response.content)
 
     @property
     def authenticated(self) -> bool:
