@@ -5,6 +5,7 @@
 
   .mini {
       max-width: 32px;
+      image-rendering: pixelated;
   }
   .blog {
     display: grid;
@@ -48,7 +49,9 @@
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  gap: 0.1em;
+  gap: 1em;
+      padding-left: 0;
+      margin: auto;
 }
 ul > li {
   display: grid;
@@ -75,6 +78,7 @@ li > button {
   justify-self: end;
 }
 .mini {
+    image-rendering: pixelated;
   max-width: 64px;
   border-radius: 10px;
   grid-column: 1/2;
@@ -93,7 +97,7 @@ li > button {
   <h3>sus blogs:</h3>
   <ul>
   {% for sus in sus_blogs[blog.name] %}
-      <li><img alt="{{ sus["name"] }} avatar" src="{{ sus['avatar'][0]['url'] }}" class="mini"/><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a><button id="{{ sus['name'] }}-{{ blog.name }}-report-button">report</button></li>
+      <li><img alt="{{ sus["name"] }} avatar" src="{{ sus['avatar'][-1]['url'] }}" class="mini"/><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a><button id="{{ sus['name'] }}-{{ blog.name }}-report-button">report</button></li>
       <script>
           document.getElementById("{{ sus['name'] }}-{{ blog.name }}-report-button").addEventListener("click", ()=>{
               open("https://www.tumblr.com/abuse/start?prefill=" + btoa('{{ sus.report_json_str |safe }}'))
