@@ -1,6 +1,11 @@
 <style>
-  * {
+  *, *:before, *:after {
     font-family: 'Helvetica Neue', 'Arial', 'sans-serif';
+      box-sizing: border-box;
+  }
+  main {
+      max-width: 900px;
+      margin: auto;
   }
 
   .mini {
@@ -14,7 +19,6 @@
     gap: 0.5em;
     padding: 1em;
     align-content: center;
-    max-width: 640px;
     border-radius: 10px;
     margin-bottom: 1em;
     background-size: cover;
@@ -87,6 +91,7 @@ li > button {
 }
 
 </style>
+<main>
 {% for blog in blog_list %}
   <div class="blog"
        style="background-color:{{ blog.background_color }}; color :{{ blog.text_color }}; background-image: url('{{ blog.header }}'); text-shadow: 0 0 10px {{ blog.background_color }};box-shadow: inset 0 32px 128px {{ blog.background_color }};">
@@ -106,3 +111,4 @@ li > button {
   {% endfor %}
   </ul>
 {% endfor %}
+</main>
