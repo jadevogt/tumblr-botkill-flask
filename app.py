@@ -3,6 +3,8 @@ from os import environ
 import uuid
 from urllib.parse import urlencode, urlparse, parse_qs
 
+from tumblr import Tumblr
+
 app = Flask(__name__)
 app.secret_key = environ.get("FLASK_SECRET_KEY")
 
@@ -24,13 +26,12 @@ def auth_handler():
     qs = parse_qs(parsed_url.query)
     state = session.get("state")
     returned_state = qs.get("state")
-    returned_code = qs.get("code")
-    return f"""
-    <h1>returned state: {returned_state}</h1>
-    <h1>stored state: {state}</h1>
-    <h1>code {returned_code}</h1>
-    """
-
+    if state not in returned_state:
+        return f"""state mismatch!"""
+    returned_code = qs.get("code")[0]
+    tumblr = Tumblr()
+    tumblr.authenticate(returned_code)
+    return f"""<h2>{tumblr.token}</h2>"""
 
 @app.route('/initiate-auth')
 def auth_initiator():
