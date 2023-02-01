@@ -56,7 +56,7 @@ def auth_handler():
         <h1>success!</h1>
         <a href="/list_blogs">list blogs</a>
         """
-    except RateLimitException:
+    except (RateLimitException, KeyError):
         return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
 
 @app.route('/initiate-auth')
