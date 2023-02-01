@@ -26,7 +26,8 @@ def list_blogs():
         blog_list = tumblr.user_blogs()
         non_mutual_followers = []
         for blog in blog_list:
-            new = [f for f in tumblr.blog_followers(blog) if not f["following"]]
+            followers = tumblr.blog_followers(blog)
+            new = [f for f in followers if f["following"] != True]
             for follower in new:
                 follower["follows"] = blog.name
                 non_mutual_followers += new

@@ -53,11 +53,8 @@
   <ul>
   {% for sus in sus_blogs %}
     {% if sus['follows'] == blog.name %}
-      <li><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a> - <a href="{{ sus['report_url'] }}">report</a></li>
+      <li><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a></li>
     {% endif %}
   {% endfor %}
   </ul>
-{% endfor %}
-{% for blog in sus_blogs %}
-  <p></p>
 {% endfor %}
