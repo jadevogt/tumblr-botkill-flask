@@ -61,7 +61,7 @@ ul > li {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   grid-template-columns: 80px 1fr 72px;
-  width: 500px;
+  max-width: 500px;
   align-items: center;
   padding: 0.25em;
   gap: 0.25em;
@@ -91,6 +91,11 @@ li > button {
 }
 
 </style>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sus blogs</title>
+</head>
+<body>
 <main>
 {% for blog in blog_list %}
   <div class="blog"
@@ -108,7 +113,11 @@ li > button {
               open("https://www.tumblr.com/abuse/start?prefill=" + btoa('{{ sus.report_json_str |safe }}'))
           })
       </script>
+  {% else %}
+      <h4>none found</h4>
   {% endfor %}
   </ul>
+    <hr>
 {% endfor %}
 </main>
+</body>
