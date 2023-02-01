@@ -53,21 +53,18 @@ def auth_handler():
     """
     auth
     """
-    try:
-        parsed_url = urlparse(request.url)
-        qs = parse_qs(parsed_url.query)
-        state = session.get("state")
-        returned_state = qs.get("state")
-        returned_code = qs.get("code")[0]
-        tumblr = Tumblr()
-        tumblr.authenticate(returned_code)
-        session["tumblr_token"] = tumblr.token.to_dict()
-        return f"""
-        <h1>success!</h1>
-        <a href="/list_blogs">list blogs</a>
-        """
-    except (RateLimitException, KeyError):
-        return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
+    parsed_url = urlparse(request.url)
+    qs = parse_qs(parsed_url.query)
+    state = session.get("state")
+    returned_state = qs.get("state")
+    returned_code = qs.get("code")[0]
+    tumblr = Tumblr()
+    tumblr.authenticate(returned_code)
+    session["tumblr_token"] = tumblr.token.to_dict()
+    return f"""
+    <h1>success!</h1>
+    <a href="/list_blogs">list blogs</a>
+    """
 
 
 @app.route('/initiate-auth')
