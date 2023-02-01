@@ -132,6 +132,8 @@ class Tumblr:
             self.token = None
 
     def authenticate(self, authentication_code):
+        if self.authenticated:
+            return
         body = {
             'grant_type': 'authorization_code',
             'client_id': self.consumer_id,
