@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block title %}sus blog list{% endblock %}
 {% block content %}
+    <h1>suspicious blogs</h1>
+    <p>the following suspicious blogs were found.</p>
+    <details>
+        <summary>why can't you block these automatically?</summary>
+    while it would be possible to use the block endpoint to automatically block all the
+    found blogs, it would rapidly push this application towards the rate limit. moreover,
+    blocking the blogs via the report form (hopefully) helps the site staff identify spammers
+    and cut down on the number of fake accounts. lastly, doing things like this makes it possible
+    for this application to require the bare minimum read-only access to your account, so you don't
+    have to worry about changes being made automatically without your consent.
+    </details>
 {% for blog in blog_list %}
   <div class="blog"
        style="background-color:{{ blog.background_color }}; color :{{ blog.text_color }}; background-image: url('{{ blog.header }}'); text-shadow: 0 0 10px {{ blog.background_color }};box-shadow: inset 0 32px 128px {{ blog.background_color }};">
