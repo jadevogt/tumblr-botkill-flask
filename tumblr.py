@@ -141,9 +141,6 @@ class Tumblr:
             }
             response = requests.post("https://api.tumblr.com/v2/oauth2/token",
                                      headers=self.default_headers, json=body)
-            if response.json().get("meta") is not None and response.json()["meta"]["status"] == 429:
-                self.token = None
-                return
             self.token = Token.from_dict(response.json())
         except Exception:
             logging.error(response.content)
