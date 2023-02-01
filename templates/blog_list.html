@@ -11,9 +11,13 @@
   <h3>sus blogs:</h3>
   <ul>
   {% if sus_blogs[blog.name] %}
-      <h4>open report forms in bulk</h4>
-      <p>please disable your pop-up blocker before using this button</p>
-      <button id="{{ blog.name }}-bulk-report">open all</button>
+      <div class="bulk-container">
+        <div class="inner-bulk">
+        <h3>open all report forms</h3>
+            <button id="{{ blog.name }}-bulk-report">open all</button>
+        </div>
+        <p>please make sure that you have your pop-up blocker disabled before trying to use this feature</p>
+      </div>
       <script>
       document.getElementById("{{ blog.name }}-bulk-report").addEventListener("click", () => {
           document.querySelectorAll(".{{ blog.name }}-button").forEach(button => button.click());
