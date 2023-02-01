@@ -144,8 +144,9 @@ class Tumblr:
             'Accept': 'application/json',
             'User-Agent': 'PyTumblrBotKill/0.0.1',
         }
+        logging.error(f"authenticating with {authentication_code}")
         response = requests.post("https://api.tumblr.com/v2/oauth2/token",
-                                 headers=self.headers, json=body)
+                                 headers=headers, json=body)
         logging.error(str(response.json()))
         self.token = Token.from_dict(response.json())
 
