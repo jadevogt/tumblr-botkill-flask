@@ -138,6 +138,7 @@ class Tumblr:
             'code': authentication_code,
             'client_id': self.consumer_id,
             'client_secret': self.consumer_secret,
+            'redirect_uri': environ.get("REDIRECT_URI")
         }
         headers = {
             'Content-Type': 'application/json',
