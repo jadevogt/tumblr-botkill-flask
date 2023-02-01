@@ -65,9 +65,13 @@ def auth_handler():
         tumblr.authenticate(returned_code)
         session["tumblr_token"] = tumblr.token.to_dict()
         return redirect('/list_blogs')
-    except (RateLimitException, KeyError) as error:
+    except RateLimitException as error:
         logging.error(error)
         return render_template("rate_limit.html")
+    except Exception as error:
+        logging.error(error)
+        return render_template("rate_limit.html")
+
 
 @app.route('/initiate-auth')
 def auth_initiator():
