@@ -34,6 +34,12 @@ def list_blogs():
         sus_blogs = {b.name: [] for b in blog_list}
         for follower in non_mutual_followers:
             if tumblr.public_blog_post_count(blog_name=follower["name"]) == 0:
+                follower["report_json_str"] = dumps({
+                    "post":null,
+                    "urlreporting":f"https://www.tumblr.com/{follower['name']}",
+                    "tumblelog":follower["name"],
+                    "context":"blog"
+                })
                 sus_blogs[follower["follows"]].append(follower)
         return render_template("blog_list.html", blog_list=blog_list, sus_blogs=sus_blogs)
     except RateLimitException:
