@@ -1,7 +1,34 @@
 {% extends "base.html" %}
 {% block title %}tumblr spam bot finder{% endblock %}
 {% block content %}
-    <h2>welcome to the spam detector</h2>
-    <h3>this tool will not make any changes to your account, instead, you will be provided with links to report each detected blog</h3>
-    click <a href="/initiate-auth">here</a> to initiate the authentication procedure
+    <h1>welcome to the spam detector</h1>
+    <h2>this tool will not make any changes to your account, instead, you will be provided with links to report each detected blog</h2>
+    click <a href="/initiate-auth">here</a> to log in with your tumblr account
+    <hr>
+    <h2>quick answers to questions you may have</h2>
+    <details>
+        <summary><em>why do I need to log in?</em></summary>
+    logging into your tumblr account allows the app to see who follows you. you need to sign in because this information
+    is not public
+    </details>
+    <details>
+    <summary><em>what can this application do?</em></summary>
+    this application will request read-only permissions for your tumblr account. it will not make any changes
+    to your account
+    </details>
+    <details>
+    <summary><em>does this use cookies?</em></summary>
+    this application uses an encrypted session cookie in order to store your tumblr sign in state, and nothing else. no information about you
+    is retained on the server. by using this application you're saying that you're okay with this cookie.
+    </details>
+     <details>
+    <summary><em>can I see the code?</em></summary>
+     yes! absolutely. the code can be found on github <a href="https://github.com/jadevogt/tumblr-botkill-flask">here</a>.
+     please feel free to copy this or contribute in whatever way you'd like.
+    </details>
+    <details>
+    <summary><em>what was this made with?</em></summary>
+        this application was written in python3, using the <a href="https://flask.palletsprojects.com/">flask web framework</a>. in addition to flask and its dependencies,
+        it uses <a href="https://requests.readthedocs.io">requests</a> to handle http requests server-side
+    </details>
 {% endblock %}
