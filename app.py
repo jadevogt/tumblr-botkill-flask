@@ -45,7 +45,7 @@ def list_blogs():
                 sus_blogs[follower["follows"]].append(follower)
         return render_template("blog_list.html", blog_list=blog_list, sus_blogs=sus_blogs)
     except RateLimitException:
-        return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
+        return render_template("rate_limit.html")
 
 @app.route('/auth')
 def auth_handler():
@@ -63,7 +63,7 @@ def auth_handler():
         session["tumblr_token"] = tumblr.token.to_dict()
         return redirect('/list_blogs')
     except (RateLimitException, KeyError):
-        return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
+        return render_template("rate_limit.html")
 
 @app.route('/initiate-auth')
 def auth_initiator():

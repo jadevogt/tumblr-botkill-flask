@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}rate limit exceeded{% endblock title %}
+{% block content %}
+    <h1>application rate limit exceeded</h1>
+    <h2>the tumblr api limits the amount of requests this application can make, and apparently we've hit that limit. please try again in an hour</h2>
+    <p>sorry about that. click <a href="/">here</a> to return to the main page</p>
+{% endblock content %}
