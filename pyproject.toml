@@ -7,6 +7,7 @@ authors = ["jadev-dev <me@jadev.dev>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 Flask = "^2.2.2"
+gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
 
