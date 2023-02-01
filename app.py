@@ -30,6 +30,12 @@ def check_auth():
         not authenticated.
         """
 
+@app.route("/list_blogs")
+def list_blogs():
+    tumblr = Tumblr(token=session.get("tumblr_token"))
+    return "</br>".join(blog.__str__() for blog in tumblr.user_blogs())
+
+
 @app.route('/auth')
 def auth_handler():
     """
@@ -54,7 +60,7 @@ def auth_initiator():
     """
     init auth
     """
-    params = make_url_params()
+    params = make_url_params(writeable=True)
     return redirect(f"https://www.tumblr.com/oauth2/authorize?{urlencode(params)}")
 
 

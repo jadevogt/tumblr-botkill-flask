@@ -64,6 +64,33 @@ EXAMPLE = {
     "token_type": "bearer"
 }
 
+@dataclass
+class Blog:
+    avatar: str
+    follower_count: int
+    name: str
+    primary: bool
+    background_color: str
+    header: str
+    text_color: str
+    title: str
+    url: str
+    uuid: str
+
+    @classmethod
+    def from_json(cls, json):
+        return cls(
+            avatar=json["avatar"][0]["url"],
+            follower_count=json["followers"],
+            name=json["name"],
+            primary=json["primary"],
+            background_color=json["theme"].get("background_color"),
+            header=json["theme"].get("header_image"),
+            text_color=json["theme"].get("title_color"),
+            title=json["title"],
+            url=json["url"],
+            uuid=json["uuid"],
+        )
 
 class Tumblr:
     """
@@ -119,12 +146,30 @@ class Tumblr:
         """
         return self.token is not None and not self.token.expired
 
+    def get(self, endpoint):
+        """
+        perform an http GET
+        """
+        response = requests.get(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers)
+        return response.json()
+
+
+    def post(self, endpoint, body):
+        response = requests.post(f"https://api.tumblr.com/v2/{endpoint}", headers=self.privileged_headers, json=body)
+        return response.json()
+
+
     def user_info(self):
         """
         get the authenticated user's info
         """
-        response = requests.get("https://api.tumblr.com/v2/user/info", headers=self.privileged_headers)
-        return response.json()
+        return self.get("user/info")["response"]["user"]
+
+    def user_blogs(self):
+        """
+        get a list of Blog objects
+        """
+        return [Blog.from_json(b) for b in self.user_info()["blogs"]]
 
     @property
     def privileged_headers(self):
