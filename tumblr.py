@@ -17,14 +17,14 @@ class Token:
     originally_issued: datetime = field(init=False)
 
     def __post_init__(self):
-        object.__setattr__(self, "originally_issued", datetime.now())
+        object.__setattr__(self, "originally_issued", datetime.now().replace(tzinfo=None))
 
     @property
     def expired(self) -> bool:
         """
         tells whether the token is expired
         """
-        return datetime.now() - self.originally_issued > timedelta(seconds=self.expires_in)
+        return datetime.now().replace(tzinfo=None) - self.originally_issued.replace(tzinfo=None) > timedelta(seconds=self.expires_in)
 
     def check_scope(self, scope: str) -> bool:
         """
