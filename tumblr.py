@@ -186,8 +186,8 @@ class Tumblr:
         return users
 
     def public_blog_post_count(self, blog_name: str):
-        resp = self.get(f"blog/{blog_name}/info?fields[blogs]=posts")
-        return resp["response"]["blog"]["posts"]
+        resp = self.get(f"blog/{blog_name}/info?fields[blogs]=posts,avatar")
+        return resp["response"]["blog"]["posts"], resp["response"]["blog"]["avatar"]
 
     @property
     def privileged_headers(self):
