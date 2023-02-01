@@ -1,8 +1,6 @@
 from flask import Flask, session
-from dotenv import load_dotenv
 from os import environ
 
-load_dotenv(override=True)
 app = Flask(__name__)
 app.secret_key = environ.get("FLASK_SECRET_KEY")
 
