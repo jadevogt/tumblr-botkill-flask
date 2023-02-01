@@ -92,7 +92,10 @@ class Tumblr:
     def __init__(self, token=None):
         self.consumer_id = environ.get("TUMBLR_CONSUMER_KEY")
         self.consumer_secret = environ.get("TUMBLR_CONSUMER_SECRET")
-        self.token = token
+        if token is not None:
+            self.token = Token.from_dict(token)
+        else:
+            self.token = None
 
     def authenticate(self, authentication_code):
         try:
