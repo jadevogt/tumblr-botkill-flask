@@ -55,8 +55,6 @@ def auth_handler():
     """
     try:
         tumblr = Tumblr(session.get("tumblr_token"))
-        if tumblr.authenticated:
-            return redirect('/list_blogs')
         parsed_url = urlparse(request.url)
         qs = parse_qs(parsed_url.query)
         state = session.get("state")
