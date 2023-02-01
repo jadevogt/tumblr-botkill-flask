@@ -17,6 +17,19 @@ def index():  # put application's code here
     return 'main page'
 
 
+@app.route('/check_auth')
+def check_auth():
+    tumblr = Tumblr(token=session.get("tumblr_token"))
+    if tumblr.authenticated:
+        return f"""
+        authenticated: {tumblr.token}
+        user info: {tumblr.user_info()}
+        """
+    else:
+        return f"""
+        not authenticated.
+        """
+
 @app.route('/auth')
 def auth_handler():
     """
@@ -29,6 +42,7 @@ def auth_handler():
     returned_code = qs.get("code")[0]
     tumblr = Tumblr()
     tumblr.authenticate(returned_code)
+    session["tumblr_token"] = tumblr.token.to_dict()
     return f"""
     <h2>{tumblr.token}</h2>
     <h2>state: {state}</h2>
