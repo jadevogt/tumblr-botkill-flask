@@ -62,6 +62,7 @@ def auth_handler():
         state = session.get("state")
         returned_state = qs.get("state")
         returned_code = qs.get("code")[0]
+        logging.info(f"authenticating with returned code {returned_code}")
         tumblr.authenticate(returned_code)
         session["tumblr_token"] = tumblr.token.to_dict()
         return redirect('/list_blogs')
