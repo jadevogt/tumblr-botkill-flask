@@ -141,6 +141,9 @@ class Tumblr:
         }
         response = requests.post("https://api.tumblr.com/v2/oauth2/token",
                                  headers=self.default_headers, json=body)
+        if response.json().get("access_token") is None:
+            logging.error(str(response.json()))
+            raise RateLimitException()
         self.token = Token.from_dict(response.json())
 
     @property
