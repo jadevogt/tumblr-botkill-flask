@@ -10,8 +10,18 @@
   </div>
   <h3>sus blogs:</h3>
   <ul>
+  {% if sys_blogs[blog.name] %}
+      <h4>open report forms in bulk</h4>
+      <p>please disable your pop-up blocker before using this button</p>
+      <button id="{{ blog.name }}-bulk-report">open all</button>
+      <script>
+      document.getElementById("{{ blog.name }}-bulk-report").addEventListener("click", () => {
+          document.querySelectorAll(".{{ blog.name }}-button").forEach(button => button.click());
+      });
+      </script>
+  {% endif %}
   {% for sus in sus_blogs[blog.name] %}
-      <li><img alt="{{ sus["name"] }} avatar" src="{{ sus['avatar'][-1]['url'] }}" class="mini"/><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a><button id="{{ sus['name'] }}-{{ blog.name }}-report-button">report</button></li>
+      <li><img alt="{{ sus["name"] }} avatar" src="{{ sus['avatar'][-1]['url'] }}" class="mini"/><a href="https://{{ sus['name'] }}.tumblr.com">{{ sus['name'] }}</a><button id="{{ sus['name'] }}-{{ blog.name }}-report-button" class="{{ blog.name }}-button">report</button></li>
       <script>
           document.getElementById("{{ sus['name'] }}-{{ blog.name }}-report-button").addEventListener("click", ()=>{
               open("https://www.tumblr.com/abuse/start?prefill=" + btoa('{{ sus.report_json_str |safe }}'))
