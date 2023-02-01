@@ -4,7 +4,7 @@
     <h1>suspicious blogs</h1>
     <p>the following suspicious blogs were found.</p>
     <details>
-        <summary>why can't you block these automatically?</summary>
+        <summary><em>why can't you block these automatically?</em></summary>
     while it would be possible to use the block endpoint to automatically block all the
     found blogs, it would rapidly push this application towards the rate limit. moreover,
     blocking the blogs via the report form (hopefully) helps the site staff identify spammers
@@ -27,7 +27,7 @@
         <h3>open all report forms</h3>
             <button id="{{ blog.name }}-bulk-report">open all</button>
         </div>
-        <p>please make sure that you have your pop-up blocker disabled before trying to use this feature</p>
+          <p>please make sure that you have your pop-up blocker disabled before trying to use this feature. <br>it probably won't work on mobile.</p>
       </div>
       <script>
       document.getElementById("{{ blog.name }}-bulk-report").addEventListener("click", () => {
