@@ -30,11 +30,11 @@ def list_blogs():
             new = [f for f in followers if f["following"] != True]
             for follower in new:
                 follower["follows"] = blog.name
-                non_mutual_followers += new
-        sus_blogs = []
+            non_mutual_followers += new
+        sus_blogs = {b.name: [] for b in blog_list}
         for follower in non_mutual_followers:
             if tumblr.public_blog_post_count(blog_name=follower["name"]) == 0:
-                sus_blogs.append(follower)
+                sus_blogs[follower["follows"]].append(follower)
         return render_template("blog_list.html", blog_list=blog_list, sus_blogs=sus_blogs)
     except RateLimitException:
         return "<h1>application rate limit exceeded</h1><p>please try again later</p>"
