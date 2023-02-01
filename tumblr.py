@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from os import environ
@@ -83,15 +84,18 @@ class Tumblr:
         consumer_secret = environ.get("TUMBLR_CONSUMER_SECRET")
 
     def authenticate(self, authentication_code):
-        body = {
-            'grant_type': 'authorization_code',
-            'client_id': self.consumer_id,
-            'client_secret': self.consumer_secret,
-            'redirect_uri': self.redirect_uri,
-            'code': authentication_code,
-        }
-        response = requests.post(headers=self.default_headers, json=body)
-        self.token = Token.from_response(response.json())
+        try:
+            body = {
+                'grant_type': 'authorization_code',
+                'client_id': self.consumer_id,
+                'client_secret': self.consumer_secret,
+                'redirect_uri': self.redirect_uri,
+                'code': authentication_code,
+            }
+            response = requests.post(headers=self.default_headers, json=body)
+            self.token = Token.from_response(response.json())
+        except Exception:
+            logging.error(response.content)
 
     @property
     def authenticated(self) -> bool:
